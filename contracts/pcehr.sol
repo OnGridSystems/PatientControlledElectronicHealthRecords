@@ -26,9 +26,9 @@ contract PCEHR {
 
     mapping (address => Patient) public patients;
     mapping (address => RecordsRecepient) public recepients;
-    mapping (address => mapping (string => RecordsSet)) recordsSets;
-    mapping (address => mapping (address => mapping (string => RecepientRights))) recepientsRights;
-    mapping (string => bool) recordsSetsTypes;
+    mapping (address => mapping (bytes32 => RecordsSet)) recordsSets;
+    mapping (address => mapping (address => mapping (bytes32 => RecepientRights))) recepientsRights;
+    mapping (bytes32 => bool) recordsSetsTypes;
 
     modifier onlyRegisteredPatient() {
         require(
@@ -64,7 +64,7 @@ contract PCEHR {
 
     modifier onlyHasReadRightsRecepient(
         address _patientAddress,
-        string _recordsType
+        bytes32 _recordsType
     ) {
         require(
             recepientsRights[_patientAddress][msg.sender][_recordsType].canRead,
@@ -75,7 +75,7 @@ contract PCEHR {
 
     modifier onlyHasExtendRightsRecepient(
         address _patientAddress,
-        string _recordsType
+        bytes32 _recordsType
     ) {
         require(
             recepientsRights[_patientAddress][msg.sender][_recordsType].canExtend,
@@ -84,7 +84,7 @@ contract PCEHR {
         _;
     }
 
-    modifier onlyPatientHasRecordsSetType(string _recordsType) {
+    modifier onlyPatientHasRecordsSetType(bytes32 _recordsType) {
         require(
             recordsSets[msg.sender][_recordsType].exists,
             "Sender has no records set of this type"
@@ -92,7 +92,7 @@ contract PCEHR {
         _;
     }
 
-    modifier onlyNonExistedRecordsSet(string _recordsType) {
+    modifier onlyNonExistedRecordsSet(bytes32 _recordsType) {
         require(
             !recordsSets[msg.sender][_recordsType].exists,
             "Records set with this proxyId already exists"
@@ -100,7 +100,7 @@ contract PCEHR {
         _;
     }
 
-    modifier validRecordsSetType(string _recordsType) {
+    modifier validRecordsSetType(bytes32 _recordsType) {
         require(
             recordsSetsTypes[_recordsType],
             "Invalid records set type"
@@ -124,7 +124,7 @@ contract PCEHR {
     event RecordsSetAdded(
         address _addedBy,
         bytes32 _recordsSetProxyId,
-        string _recordsType
+        bytes32 _recordsType
     );
 
     event RecordsSetExtended(
@@ -142,6 +142,11 @@ contract PCEHR {
         address indexed _toRecepientAddress
     );
 
+    constructor(bytes32[] _recordsSetsTypes) public {
+        for (uint i = 0; i < _recordsSetsTypes.length; i++) {
+            recordsSetsTypes[_recordsSetsTypes[i]] = true;
+        }
+    }
 
     function registerPatient(
         bytes32 _patientProxyId,
@@ -189,19 +194,21 @@ contract PCEHR {
     function addRecordsSet(
         address _patientAddress,
         bytes32 _proxyId,
-        string _recordsType
+        bytes32 _recordsType
     ) 
     public
     validRecordsSetType(_recordsType)
+    onlyNonExistedRecordsSet(_recordsType)
     onlyHasExtendRightsRecepient(_patientAddress, _recordsType)
     {
         recordsSets[_patientAddress][_recordsType] = RecordsSet(true, _proxyId);
+
         emit RecordsSetAdded(msg.sender, _proxyId, _recordsType);       
     }
 
     function extendRecordsSet(
         address _patientAddress,
-        string _recordsType
+        bytes32 _recordsType
     )
     public
     validRecordsSetType(_recordsType)
@@ -214,7 +221,7 @@ contract PCEHR {
     }
 
     function allowRecordsSetReadRights(
-        string _recordsSetType,
+        bytes32 _recordsSetType,
         address _toRecepientAddress
     )
     public
@@ -224,11 +231,12 @@ contract PCEHR {
     {
         recepientsRights[msg.sender][_toRecepientAddress][_recordsSetType] = RecepientRights(true, false);
         bytes32 proxyId = recordsSets[msg.sender][_recordsSetType].proxyId;
+
         emit AllowedReadAccessToRecordsSet(proxyId, _toRecepientAddress);
     }
 
     function allowRecordsSetExtendRights(
-        string _recordsSetType,
+        bytes32 _recordsSetType,
         address _toRecepientAddress
     )
     public
@@ -238,6 +246,7 @@ contract PCEHR {
     {
         recepientsRights[msg.sender][_toRecepientAddress][_recordsSetType] = RecepientRights(true, true);
         bytes32 proxyId = recordsSets[msg.sender][_recordsSetType].proxyId;
+
         emit AllowedExtendAccessToRecordsSet(proxyId, _toRecepientAddress);
     }
 }
