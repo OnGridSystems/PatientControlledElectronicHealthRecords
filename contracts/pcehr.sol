@@ -28,16 +28,44 @@ contract PCEHR {
     mapping (address => RecordsRecepient) public recepients;
     mapping (address => mapping (string => RecordsSet)) recordsSets;
     mapping (address => mapping (address => mapping (string => RecepientRights))) recepientsRights;
+    mapping (string => bool) recordsSetsTypes;
 
     modifier onlyRegisteredPatient() {
         require(
             patients[msg.sender].proxyId != bytes32(0x0), 
-            "Sender is not registered"
+            "Sender is not registered as patient"
         );
         _;
     }
 
-    modifier onlyHasReadRightsRecepient(address _patientAddress, string _recordsType) {
+    modifier onlyNotRegisteredPatient() {
+        require(
+            patients[msg.sender].proxyId == bytes32(0x0), 
+            "Sender already registered as patient"
+        );
+        _;
+    }
+
+    modifier onlyRegisteredRecepient() {
+        require(
+            recepients[msg.sender].proxyId != bytes32(0x0), 
+            "Sender is not registered as recepient"
+        );
+        _;
+    }
+
+    modifier onlyNotRegisteredRecepient() {
+        require(
+            recepients[msg.sender].proxyId == bytes32(0x0), 
+            "Sender already registered as recepient"
+        );
+        _;
+    }
+
+    modifier onlyHasReadRightsRecepient(
+        address _patientAddress,
+        string _recordsType
+    ) {
         require(
             recepientsRights[_patientAddress][msg.sender][_recordsType].canRead,
             "Sender has no read rights for this records set"
@@ -45,18 +73,21 @@ contract PCEHR {
         _;
     }
 
-    modifier onlyHasExtendRightsRecepient(address _patientAddress, string _recordsType) {
+    modifier onlyHasExtendRightsRecepient(
+        address _patientAddress,
+        string _recordsType
+    ) {
         require(
             recepientsRights[_patientAddress][msg.sender][_recordsType].canExtend,
-            "Sender has no write rights for this records set"
+            "Sender has no extend rights for this records set"
         );
         _;
     }
 
-    modifier onlyRecordsSetOwner(string _recordsType) {
+    modifier onlyPatientHasRecordsSetType(string _recordsType) {
         require(
             recordsSets[msg.sender][_recordsType].exists,
-            "Sender is not owner of this records set"
+            "Sender has no records set of this type"
         );
         _;
     }
@@ -65,6 +96,14 @@ contract PCEHR {
         require(
             !recordsSets[msg.sender][_recordsType].exists,
             "Records set with this proxyId already exists"
+        );
+        _;
+    }
+
+    modifier validRecordsSetType(string _recordsType) {
+        require(
+            recordsSetsTypes[_recordsType],
+            "Invalid records set type"
         );
         _;
     }
@@ -107,7 +146,11 @@ contract PCEHR {
     function registerPatient(
         bytes32 _patientProxyId,
         bytes32 _patientPubKey
-    ) public {
+    )
+    public
+    onlyNotRegisteredRecepient()
+    onlyNotRegisteredPatient()
+    {
         var patient = Patient(_patientProxyId, _patientPubKey);
         patients[msg.sender] = patient;
 
@@ -123,7 +166,11 @@ contract PCEHR {
         bytes32 _recepientProxyId,
         bytes32 _recepientPubKey,
         bytes32 _recepientRealWorldId
-    ) public {
+    )
+    public
+    onlyNotRegisteredPatient()
+    onlyNotRegisteredRecepient()
+    {
         var recepient = RecordsRecepient(
             _recepientProxyId,
             _recepientPubKey,
@@ -145,6 +192,7 @@ contract PCEHR {
         string _recordsType
     ) 
     public
+    validRecordsSetType(_recordsType)
     onlyHasExtendRightsRecepient(_patientAddress, _recordsType)
     {
         recordsSets[_patientAddress][_recordsType] = RecordsSet(true, _proxyId);
@@ -152,17 +200,44 @@ contract PCEHR {
     }
 
     function extendRecordsSet(
-        bytes32 _recordsSetId,
-        bytes32 _recordsRecepientId
-    ) public {}
+        address _patientAddress,
+        string _recordsType
+    )
+    public
+    validRecordsSetType(_recordsType)
+    onlyHasExtendRightsRecepient(_patientAddress, _recordsType)
+    {
+        emit RecordsSetExtended(
+            msg.sender,
+            recordsSets[_patientAddress][_recordsType].proxyId
+        );
+    }
 
     function allowRecordsSetReadRights(
-        bytes32 _recordsSetId,
+        string _recordsSetType,
         address _toRecepientAddress
-    ) public {}
+    )
+    public
+    onlyRegisteredPatient()
+    validRecordsSetType(_recordsSetType)
+    onlyPatientHasRecordsSetType(_recordsSetType)
+    {
+        recepientsRights[msg.sender][_toRecepientAddress][_recordsSetType] = RecepientRights(true, false);
+        bytes32 proxyId = recordsSets[msg.sender][_recordsSetType].proxyId;
+        emit AllowedReadAccessToRecordsSet(proxyId, _toRecepientAddress);
+    }
 
     function allowRecordsSetExtendRights(
-        bytes32 _dataSetId,
-        bytes32 _toRecepientProxyId
-    ) public {}
+        string _recordsSetType,
+        address _toRecepientAddress
+    )
+    public
+    onlyRegisteredPatient()
+    validRecordsSetType(_recordsSetType)
+    onlyPatientHasRecordsSetType(_recordsSetType)
+    {
+        recepientsRights[msg.sender][_toRecepientAddress][_recordsSetType] = RecepientRights(true, true);
+        bytes32 proxyId = recordsSets[msg.sender][_recordsSetType].proxyId;
+        emit AllowedExtendAccessToRecordsSet(proxyId, _toRecepientAddress);
+    }
 }
