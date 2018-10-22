@@ -6,7 +6,7 @@ from .models import (
 )
 from .serializers import (
     PatientSerializer,
-    PublicDataSetSerializer
+    PublicRecordsSetSerializer
 )
 
 
@@ -15,6 +15,6 @@ class PatientViewSet(viewsets.ModelViewSet):
     serializer_class = PatientSerializer
 
 
-class DataSetViewSet(viewsets.ModelViewSet):
+class RecordsSetViewSet(viewsets.ModelViewSet):
     queryset = RecordsSet.objects.all()
-    serializer_class = PublicDataSetSerializer
+    serializer_class = PublicRecordsSetSerializer

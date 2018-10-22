@@ -14,7 +14,7 @@ class PatientSerializer(serializers.HyperlinkedModelSerializer):
         )
 
 
-class PublicDataSetSerializer(serializers.HyperlinkedModelSerializer):
+class PublicRecordsSetSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = RecordsSet
-        fields = ('name', 'quantity')
+        fields = ('type', 'id')
