@@ -2,7 +2,7 @@ from rest_framework import viewsets
 
 from .models import (
     Patient,
-    DataSet
+    RecordsSet
 )
 from .serializers import (
     PatientSerializer,
@@ -16,5 +16,5 @@ class PatientViewSet(viewsets.ModelViewSet):
 
 
 class DataSetViewSet(viewsets.ModelViewSet):
-    queryset = DataSet.objects.all()
+    queryset = RecordsSet.objects.all()
     serializer_class = PublicDataSetSerializer

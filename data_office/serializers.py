@@ -1,6 +1,6 @@
 from .models import (
     Patient,
-    DataSet
+    RecordsSet
 )
 from rest_framework import serializers
 
@@ -16,5 +16,5 @@ class PatientSerializer(serializers.HyperlinkedModelSerializer):
 
 class PublicDataSetSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = DataSet
+        model = RecordsSet
         fields = ('name', 'quantity')

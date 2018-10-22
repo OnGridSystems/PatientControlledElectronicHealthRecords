@@ -11,21 +11,20 @@ class Patient(models.Model):
     pub_key = models.CharField(max_length=100)
 
 
-class DataSet(models.Model):
+class RecordsSet(models.Model):
     patient = models.ForeignKey(
         Patient,
-        related_name="data_sets",
+        related_name="records_sets",
         on_delete=models.CASCADE
     )
-    name = models.CharField(max_length=100)
-    quantity = models.IntegerField()
+    type = models.CharField(max_length=100)
 
     data = models.BinaryField()
     capsule = models.BinaryField()
 
 
 class Recepient(models.Model):
-    organisation_name = models.CharField(max_length=100)
+    organisation_id = models.CharField(max_length=100)
     eth_address = ETHAddressField()
     pub_key = models.CharField(max_length=100)
-    data_sets = models.ManyToManyField(DataSet, related_name='recepients')
+    records_sets = models.ManyToManyField(RecordsSet, related_name='recepients')

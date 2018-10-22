@@ -1,14 +1,14 @@
 from django.db import models
 
 from data_office.models import (
-    DataSet,
+    RecordsSet,
     Recepient
 )
 
 
 class Delegation(models.Model):
-    data_set = models.ForeignKey(
-        DataSet,
+    records_set = models.ForeignKey(
+        RecordsSet,
         on_delete=models.CASCADE,
         related_name='delegations'
     )

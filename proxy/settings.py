@@ -18,6 +18,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'data_office',
     're_encryption',
+    'blockchain',
 ]
 
 MIDDLEWARE = [
@@ -87,3 +88,14 @@ USE_TZ = True
 
 
 STATIC_URL = '/static/'
+
+
+
+PCEHR_CONTRACT = {
+    'address': '0x198a3D74F6c15C54Ae52818642CE2e93dE5150CD',
+}
+
+WEB3_RPC_URL = 'http://127.0.0.1:8545'
+
+ETH_ACCOUNT = {'address': '0x73015966604928A312F79F7E69291a656Cb88602',
+               'private_key': 'e362e876f03abf385273ff2f5f2d9b75903d34130942ef891c378815d5ae0b71'}
