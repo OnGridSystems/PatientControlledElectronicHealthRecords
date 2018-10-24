@@ -1,6 +1,7 @@
 from .patient import (
     PatientList,
-    PatientDetail
+    PatientDetail,
+    PatientCreation
 )
 from .records_set import (
     RecordsSetList,

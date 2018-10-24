@@ -12,4 +12,4 @@ class Patient(models.Model):
     )
 
     eth_address = ETHAddressField()
-    pub_key = models.CharField(max_length=100)
+    pub_key = models.CharField(max_length=200)

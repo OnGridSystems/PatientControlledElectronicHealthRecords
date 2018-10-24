@@ -5,7 +5,8 @@ from rest_framework.reverse import reverse
 
 from data_office.serializers import (
     PatientListSerializer,
-    PatientDetailSerializer
+    PatientResetSerializer,
+    PatientSignupSerializer
 )
 
  
@@ -15,7 +16,11 @@ class PatientList(generics.ListCreateAPIView):
 
 
 class PatientDetail(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = PatientDetailSerializer
+    serializer_class = PatientResetSerializer
 
     def get_queryset(self):
         return Patient.objects.all().filter(user=self.request.user)
+
+
+class PatientCreation(generics.CreateAPIView):
+    serializer_class = PatientSignupSerializer

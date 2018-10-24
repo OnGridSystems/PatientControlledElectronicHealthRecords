@@ -6,7 +6,10 @@ from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 
-from data_office.serializers import PublicRecordsSetSerializer
+from data_office.serializers import (
+    PublicRecordsSetSerializer,
+    ExtendRecordsSetSerializer
+)
 
 
 class RecordsSetList(generics.ListCreateAPIView):
@@ -19,7 +22,7 @@ class RecordsSetList(generics.ListCreateAPIView):
 
 
 class RecordsSetDetail(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = PublicRecordsSetSerializer
+    serializer_class = ExtendRecordsSetSerializer
  
     def get_queryset(self):
         patient = Patient.objects.filter(user=self.request.user).first()

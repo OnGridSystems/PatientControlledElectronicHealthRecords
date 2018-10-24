@@ -14,5 +14,5 @@ class Recepient(models.Model):
 
     organisation_id = models.CharField(max_length=100)
     eth_address = ETHAddressField()
-    pub_key = models.CharField(max_length=100)
+    pub_key = models.CharField(max_length=200)
     records_sets = models.ManyToManyField(RecordsSet, related_name='recepients')

@@ -7,7 +7,7 @@ from .models import (
 )
 
 
-class UserSerializer(serializers.ModelSerializer):
+class CreateUserSerializer(serializers.ModelSerializer):
      class Meta:
         model = User
         fields = (
@@ -23,23 +23,22 @@ class UserSerializer(serializers.ModelSerializer):
         }
 
 
-class PatientDetailSerializer(serializers.HyperlinkedModelSerializer):
-    user = UserSerializer()
-
-    def create(self, validated_data):
-        user = User(
-            username=validated_data.get('user').get('username', None)
+class UpdateUserSerializer(serializers.ModelSerializer):
+     class Meta:
+        model = User
+        fields = (
+            'id', 'username',
+            'first_name', 'last_name',
         )
-        user.set_password(validated_data.get('user').get('password', None))
-        user.save()
 
-        patient = Patient.objects.create(
-            user=user,
-            eth_address=validated_data.get('eth_address', None),
-            pub_key=validated_data.get('pub_key', None)
-        )
-        return patient
- 
+        extra_kwargs = {
+            'id': {
+                'read_only': True
+            }
+        }
+
+
+class PatientResetSerializer(serializers.HyperlinkedModelSerializer):
     def update(self, instance, validated_data):
         for field in validated_data:
             if field == 'password':
@@ -47,23 +46,79 @@ class PatientDetailSerializer(serializers.HyperlinkedModelSerializer):
             else:
                 instance.__setattr__(field, validated_data.get(field))
         instance.save()
+
         return instance
  
     class Meta:
         model = Patient
-        fields = ('eth_address', 'pub_key', 'user')
+        fields = ('password')
+        extra_kwargs = {
+            'id': {
+                'write_only': True
+            }
+        }
+
+
+class PatientSignupSerializer(serializers.Serializer):
+    first_name = serializers.CharField()
+    last_name = serializers.CharField()
+    email = serializers.CharField()
+    password = serializers.CharField()
+    eth_address = serializers.CharField()
+    pub_key = serializers.CharField()
+
+    def create(self, validated_data):
+        user = User(
+            username=validated_data.get('email', None),
+            first_name=validated_data.get('first_name', None),
+            last_name=validated_data.get('last_name', None),
+        )
+        user.set_password(validated_data.get('password', None))
+        user.save()
+
+        patient = Patient.objects.create(
+            user=user,
+            eth_address=validated_data.get('eth_address', None),
+            pub_key=validated_data.get('pub_key', None)
+        )
+
+        return patient
+    
+    def save(self):
+        pass
 
 
 class PatientListSerializer(serializers.ModelSerializer):
-     class Meta:
+    user = UpdateUserSerializer()
+
+    class Meta:
         model = Patient
-        fields = (
-            'id', 'username',
-            'first_name','last_name'
-        )
+        fields = ('id', 'eth_address', 'user')
 
 
 class PublicRecordsSetSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = RecordsSet
         fields = ('type', 'id')
+
+
+class CreateRecordsSetSerializer(serializers.HyperlinkedModelSerializer):
+    patient_id = serializers.IntegerField()
+
+    def create(self, validated_data):
+        patient = Patient.objects.get(id=validated_data.get('patient_id'))
+        records_set = RecordsSet.objects.create(
+            patient=patient,
+            type=validated_data.get('type'),
+            data=validated_data.get('data'),
+            caplsule=validated_data.get('capsule')
+        )
+
+        return records_set
+
+    class Meta:
+        model = RecordsSet
+
+
+class ExtendRecordsSetSerializer(serializers.HyperlinkedModelSerializer):
+    pass
