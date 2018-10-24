@@ -90,7 +90,6 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 
-
 PCEHR_CONTRACT = {
     'address': '0x198a3D74F6c15C54Ae52818642CE2e93dE5150CD',
 }

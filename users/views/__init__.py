@@ -3,3 +3,8 @@ from .patient import (
     PatientDetail,
     PatientCreation
 )
+from .recepient import (
+    RecepientList,
+    RecepientDetail,
+    RecepientCreation
+)
