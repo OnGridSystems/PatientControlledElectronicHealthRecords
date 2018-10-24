@@ -1,6 +1,6 @@
 from django.db import models
 
-from .patient import Patient
+from users.models.patient import Patient
 
 
 class RecordsSet(models.Model):

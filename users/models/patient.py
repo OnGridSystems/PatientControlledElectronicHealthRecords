@@ -29,8 +29,3 @@ class Patient(models.Model):
     @property
     def email(self):
         return self.user.email
-    
-    @username.setter
-    def username(self, value):
-        self.user.username = value
-        self.user.save()

@@ -1,9 +1,9 @@
-from data_office.models import Patient
+from users.models import Patient
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 
-from data_office.serializers import PatientSignupSerializer
+from users.serializers import PatientSignupSerializer
 
 
 class PatientList(generics.ListCreateAPIView):

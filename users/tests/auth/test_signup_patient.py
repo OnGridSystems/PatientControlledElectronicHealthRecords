@@ -1,7 +1,7 @@
 from django.urls import reverse
 
 from ..base import PatientAPITestCase
-from data_office.models import Patient
+from users.models import Patient
 
 
 class SignupTestCase(PatientAPITestCase):

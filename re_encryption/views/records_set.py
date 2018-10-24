@@ -1,4 +1,4 @@
-from data_office.models import (
+from users.models import (
     RecordsSet,
     Patient
 )
@@ -6,7 +6,7 @@ from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 
-from data_office.serializers import (
+from users.serializers import (
     PublicRecordsSetSerializer,
     ExtendRecordsSetSerializer
 )

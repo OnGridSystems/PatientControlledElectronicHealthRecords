@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from data_office.models import Patient
+from users.models import Patient
 
 
 USER_FIELDS = ['first_name', 'last_name', 'email', 'password']

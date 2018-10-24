@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from data_office.models import (
+from users.models import (
     Patient,
     RecordsSet
 )

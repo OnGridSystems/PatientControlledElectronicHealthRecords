@@ -1,8 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-from .fields import ETHAddressField
-from .records_set import RecordsSet
+from users.models.fields import ETHAddressField
 
 
 class Recepient(models.Model):
@@ -15,4 +14,3 @@ class Recepient(models.Model):
     organisation_id = models.CharField(max_length=100)
     eth_address = ETHAddressField()
     pub_key = models.CharField(max_length=200)
-    records_sets = models.ManyToManyField(RecordsSet, related_name='recepients')

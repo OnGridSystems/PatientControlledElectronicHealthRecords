@@ -1,9 +1,7 @@
 from django.db import models
 
-from users.models import (
-    RecordsSet,
-    Recepient
-)
+from users.models.recepient import Recepient
+from re_encryption.models.records_set import RecordsSet
 
 
 class Delegation(models.Model):
@@ -28,4 +26,4 @@ class KeyFragment(models.Model):
         related_name='key_fragments'
     )
 
-    data = models.BinaryField()
+    bytes = models.BinaryField()

@@ -3,7 +3,3 @@ from .patient import (
     PatientDetail,
     PatientCreation
 )
-from .records_set import (
-    RecordsSetList,
-    RecordsSetDetail
-)

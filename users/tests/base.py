@@ -3,7 +3,7 @@ from rest_framework.test import APIClient
 from django.contrib.auth.models import User
 
 from proxy.utils.datetime import datetime
-from data_office.models import Patient
+from users.models import Patient
 from blockchain.tests.base import BlockChainTestCase
 
 
