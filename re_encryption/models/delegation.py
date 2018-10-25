@@ -10,7 +10,8 @@ class Delegation(models.Model):
     records_set = models.ForeignKey(
         RecordsSet,
         on_delete=models.CASCADE,
-        related_name='delegations'
+        related_name='delegations',
+        blank=True, null=True
     )
     recepient = models.ForeignKey(
         Recepient,

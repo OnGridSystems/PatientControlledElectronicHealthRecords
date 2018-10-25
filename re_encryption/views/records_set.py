@@ -45,6 +45,7 @@ class RecordsSetRecepientUpdate(generics.UpdateAPIView):
         RecepientHasWritePermission
     )
     serializer_class = RecordsSetUpdateSerializer
+    queryset = RecordsSet.objects.all()
 
 
 class RecordsSetCreation(generics.CreateAPIView):

@@ -17,14 +17,14 @@ class PatientDataAccessTestCase(APITestCase):
 
     def test_patient_own_records(self):
         response = self.client.get('/me/records/')
-        print(response.data)
+        self.assertEqual(response.status_code, 200)
 
 
 class RecepientDataAccessTestCase(APITestCase):
     setup_login_patient = False
     setup_login_recepient = True
 
-    def test_recepient_delegated_records(self):
+    def test_get_delegated_records(self):
         records_set = RecordsSet.objects.create(
             id=1,
             patient=self.get_patient(),
@@ -41,8 +41,7 @@ class RecepientDataAccessTestCase(APITestCase):
         response = self.client.get('/records/1/')
         self.assertEqual(response.status_code, 200)
 
-
-    def test_recepient_not_delegated_records(self):
+    def test_get_not_delegated_records(self):
         records_set = RecordsSet.objects.create(
             id=1,
             patient=self.get_patient(),
@@ -52,4 +51,68 @@ class RecepientDataAccessTestCase(APITestCase):
         )
 
         response = self.client.get('/records/1/')
+        self.assertEqual(response.status_code, 403)
+    
+    def test_add_delegated_records(self):
+        Delegation.objects.create(
+            recepient=self.recepient,
+            patient_id=self.get_patient().id,
+            type='add'
+        )
+        
+        data = {
+            'patient_id': self.get_patient().id,
+            'type': 'type',
+            'data': 'data',
+            'capsule': 'capsule'
+        }
+        response = self.client.post('/records/add/', data)
+        self.assertEqual(response.status_code, 201)
+
+    def test_add_not_delegated_records(self):
+        data = {
+            'patient_id': self.get_patient().id,
+            'type': 'type',
+            'data': 'data',
+            'capsule': 'capsule'
+        }
+        response = self.client.post('/records/add/', data)
+        self.assertEqual(response.status_code, 403)
+
+    def test_update_delegated_records(self):
+        records_set = RecordsSet.objects.create(
+            id=1,
+            patient=self.get_patient(),
+            type='type',
+            data='data',
+            capsule='capsule'
+        )
+
+        Delegation.objects.create(
+            recepient=self.recepient,
+            type='write',
+            records_set=records_set
+        )
+
+        data = {
+            'data': 'data22',
+            'capsule': 'capsule2'
+        }
+        response = self.client.put('/records/edit/1/', data)
+        self.assertEqual(response.status_code, 200)
+
+    def test_update_not_delegated_records(self):
+        records_set = RecordsSet.objects.create(
+            id=1,
+            patient=self.get_patient(),
+            type='type',
+            data='data',
+            capsule='capsule'
+        )
+
+        data = {
+            'data': 'data22',
+            'capsule': 'capsule2'
+        }
+        response = self.client.put('/records/edit/1/', data)
         self.assertEqual(response.status_code, 403)
