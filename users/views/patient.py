@@ -9,7 +9,6 @@ from users.permissions import AnonymousPermission
 
 
 class PatientList(generics.ListAPIView):
-    permission_classes = (IsAuthenticated,)
     queryset = Patient.objects.all()
     serializer_class = PatientSignupSerializer
 

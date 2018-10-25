@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from django.contrib.auth.models import User
 
 from users.models import Recepient
 
@@ -43,6 +44,3 @@ class RecepientSerializer(serializers.Serializer):
         instance.save()
 
         return instance
-    
-    def save(self):
-        pass
