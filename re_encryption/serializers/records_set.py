@@ -14,6 +14,12 @@ class PublicRecordsSetSerializer(serializers.ModelSerializer):
         fields = ('type', 'id')
 
 
+class RecordsSetUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RecordsSet
+        fields = ('id', 'data', 'capsule')
+
+
 class RecordsSetSerializer(serializers.Serializer):
     patient_id = serializers.IntegerField()
     type = serializers.CharField()

@@ -1,4 +1,5 @@
 from .records_set import (
     RecordsSetSerializer,
-    PublicRecordsSetSerializer
+    PublicRecordsSetSerializer,
+    RecordsSetUpdateSerializer
 )

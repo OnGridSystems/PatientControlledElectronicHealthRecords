@@ -5,6 +5,8 @@ from re_encryption.models.records_set import RecordsSet
 
 
 class Delegation(models.Model):
+    type = models.CharField(max_length=200, blank=True, null=True)
+    patient_id = models.IntegerField(blank=True, null=True)
     records_set = models.ForeignKey(
         RecordsSet,
         on_delete=models.CASCADE,

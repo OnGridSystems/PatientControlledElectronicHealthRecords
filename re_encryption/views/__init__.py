@@ -1,5 +1,7 @@
 from .records_set import (
-    RecordsSetDetail,
+    RecordsSetRecepientDetail,
     RecordsSetList,
-    RecordsSetCreation
+    RecordsSetCreation,
+    RecordsSetOwnList,
+    RecordsSetRecepientUpdate
 )
