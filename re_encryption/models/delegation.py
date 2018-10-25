@@ -26,4 +26,4 @@ class KeyFragment(models.Model):
         related_name='key_fragments'
     )
 
-    bytes = models.BinaryField()
+    bytes = models.TextField()

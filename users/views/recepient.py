@@ -8,7 +8,7 @@ from users.serializers import RecepientSerializer
 from users.permissions import AnonymousPermission
 
 
-class RecepientList(generics.ListCreateAPIView):
+class RecepientList(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = Recepient.objects.all()
     serializer_class = RecepientSerializer

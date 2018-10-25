@@ -1,29 +1,25 @@
-from users.models import (
-    RecordsSet,
-    Patient
-)
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 
-from users.serializers import (
+from re_encryption.serializers import (
     PublicRecordsSetSerializer,
-    ExtendRecordsSetSerializer
+    RecordsSetSerializer
 )
+from re_encryption.models import RecordsSet
 
 
-class RecordsSetList(generics.ListCreateAPIView):
+class RecordsSetList(generics.ListAPIView):
     queryset = RecordsSet.objects.all()
     serializer_class = PublicRecordsSetSerializer
- 
-    def perform_create(self, serializer):
-        patient = Patient.objects.filter(user=self.request.user).first()
-        serializer.save(patient=patient)
 
 
 class RecordsSetDetail(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = ExtendRecordsSetSerializer
+    serializer_class = PublicRecordsSetSerializer
  
     def get_queryset(self):
-        patient = Patient.objects.filter(user=self.request.user).first()
-        return RecordsSet.objects.all().filter(patient=patient)
+        return RecordsSet.objects.all()
+
+
+class RecordsSetCreation(generics.CreateAPIView):
+    serializer_class = RecordsSetSerializer

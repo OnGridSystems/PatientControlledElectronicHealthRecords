@@ -11,5 +11,5 @@ class RecordsSet(models.Model):
     )
     type = models.CharField(max_length=100)
 
-    data = models.BinaryField()
-    capsule = models.BinaryField()
+    data = models.TextField()
+    capsule = models.TextField()
