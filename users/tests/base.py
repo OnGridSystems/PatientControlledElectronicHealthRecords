@@ -50,10 +50,10 @@ class APITestCase(TestCase):
 
         self.recepient = Recepient.objects.create(
             user=self.user,
-            eth_address=self.eth_account[:-1] + 'k',
+            eth_address=self.eth_account[:-1] + '1',
             pub_key=self.pub_key
         )
-        recepient.save()
+        self.recepient.save()
 
         self._patient_id = patient.id      
 

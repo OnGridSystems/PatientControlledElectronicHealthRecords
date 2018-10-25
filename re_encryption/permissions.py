@@ -4,6 +4,7 @@ from users.models import (
     Patient,
     Recepient
 )
+from re_encryption.models import Delegation
 
 
 class OnlyPatientPermission(permissions.BasePermission):
