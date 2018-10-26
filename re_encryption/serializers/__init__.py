@@ -4,5 +4,7 @@ from .records_set import (
     RecordsSetUpdateSerializer
 )
 from .delegation import (
-    RecordsDelegationSerializer
+    RecordsDelegationSerializer,
+    AddDelegationSerializer
 )
+from .kfragment import KfragmentSerializer

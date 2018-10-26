@@ -6,5 +6,7 @@ from .records_set import (
     RecordsSetRecepientUpdate
 )
 from .delegation import (
-    RecordsDelegationCreation
+    RecordsDelegationCreation,
+    AddDelegationCreation
 )
+from .kfragment import KfragmentListCreate
