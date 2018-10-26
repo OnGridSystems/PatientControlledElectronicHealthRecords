@@ -43,3 +43,5 @@ umbral==0.1.1a3
 urllib3==1.24
 web3==4.7.2
 websockets==6.0
+coreapi==2.3.3
+coreschema==0.0.4

@@ -5,3 +5,6 @@ from .records_set import (
     RecordsSetOwnList,
     RecordsSetRecepientUpdate
 )
+from .delegation import (
+    RecordsDelegationCreation
+)

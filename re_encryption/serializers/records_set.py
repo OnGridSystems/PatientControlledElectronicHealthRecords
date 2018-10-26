@@ -36,6 +36,3 @@ class RecordsSetSerializer(serializers.Serializer):
         )
 
         return records_set
-    
-    def save(self):
-        pass

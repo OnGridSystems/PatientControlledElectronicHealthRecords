@@ -10,4 +10,5 @@ urlpatterns = [
     url(r'^records/(?P<pk>[0-9]+)/$', views.RecordsSetRecepientDetail.as_view(), name='records-set-detail'),
     url(r'^records/add/$', views.RecordsSetCreation.as_view(), name='records-sets-add'),
     url(r'^me/records/$', views.RecordsSetOwnList.as_view(), name='records-sets-own-list'),
+    url(r'^records/delegations/make/$', views.RecordsDelegationCreation.as_view(), name='records-delegation-creation'),
 ]

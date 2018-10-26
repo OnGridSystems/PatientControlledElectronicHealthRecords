@@ -3,3 +3,6 @@ from .records_set import (
     PublicRecordsSetSerializer,
     RecordsSetUpdateSerializer
 )
+from .delegation import (
+    RecordsDelegationSerializer
+)
