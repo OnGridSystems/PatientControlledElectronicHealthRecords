@@ -69,6 +69,10 @@ class RecepientDataAccessTestCase(APITestCase):
         response = self.client.post('/records/add/', data)
         self.assertEqual(response.status_code, 201)
 
+        self.client.login(username=self.get_patient().email, password='q123sldj23')
+        response = self.client.get('/me/records/')
+        self.assertEqual(response.status_code, 200)
+
     def test_add_not_delegated_records(self):
         data = {
             'patient_id': self.get_patient().id,
