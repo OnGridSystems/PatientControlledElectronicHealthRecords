@@ -95,11 +95,6 @@ class RecepientDataSendingCase(APITestCase):
         response = self.client.get('/me/records/')
 
         from_proxy_capsule = bytes.fromhex(response.data[0]['capsule'])
-
-        #Prints that data in str type
-        print(type(response.data[0]['data']))
-
-        #Raises TypeError: fromhex() argument must be str, not bytes
         from_proxy_data = bytes.fromhex(response.data[0]['data'])
 
         umbral_parameteres = UmbralParameters(SECP256K1)
@@ -108,20 +103,25 @@ class RecepientDataSendingCase(APITestCase):
             from_proxy_capsule,
             umbral_parameteres
         )
-        from_proxy_data = bytes.fromhex(from_proxy_data)
+
+        from_proxy_capsule.set_correctness_keys(
+            delegating=recepient_public_key,
+            receiving=patient_public_key,
+            verifying=recepient_verifying_key
+        )
 
         response = self.client.get('/patients/kfrags/')
 
-        kfrags = [KFrag.from_bytes(bytes.fromhex(kfrag['bytes'])) for kfrag in response.data]
-        
-        for kfrag in kfrags:
+        from_proxy_kfrags = [KFrag.from_bytes(bytes.fromhex(kfrag['bytes'])) for kfrag in response.data]
+
+        for kfrag in from_proxy_kfrags:
             cfrag = pre.reencrypt(kfrag, from_proxy_capsule)
             from_proxy_capsule.attach_cfrag(cfrag)
-        
+
         cleartext = pre.decrypt(
             ciphertext=from_proxy_data,
             capsule=from_proxy_capsule,
-            decrypting_key=patient_public_key
+            decrypting_key=patient_private_key
         )
 
         self.assertEqual(cleartext, plaintext)
