@@ -8,3 +8,4 @@ from .delegation import (
     AddDelegationSerializer
 )
 from .kfragment import KfragmentSerializer
+from .re_encryption import ReEncryptionSerializer

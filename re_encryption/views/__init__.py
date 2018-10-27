@@ -10,3 +10,7 @@ from .delegation import (
     AddDelegationCreation
 )
 from .kfragment import KfragmentListCreate
+from .re_encryption import (
+    ReEncryptionCreation,
+    ReEncryptionDetail
+)

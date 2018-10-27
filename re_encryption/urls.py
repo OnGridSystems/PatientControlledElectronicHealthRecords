@@ -13,5 +13,7 @@ urlpatterns = [
     url(r'^me/records/$', views.RecordsSetOwnList.as_view(), name='records-sets-own-list'),
     url(r'^records/delegations/make/$', views.RecordsDelegationCreation.as_view(), name='records-delegation-creation'),
     url(r'^patients/delegations/make/$', views.AddDelegationCreation.as_view(), name='records-delegation-creation'),
-    url(r'^patients/kfrags/$', views.KfragmentListCreate.as_view(), name='patient-lfrags-creation-list'),
+    url(r'^patients/kfrags/$', views.KfragmentListCreate.as_view(), name='patient-kfrags-creation-list'),
+    url(r'^re_encryptions/(?P<pk>[0-9]+)/$', views.ReEncryptionDetail.as_view(), name='re-encryption-detail'),
+    url(r'^re_encryptions/$', views.ReEncryptionCreation.as_view(), name='re-encryption-creation'),
 ]
