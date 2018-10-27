@@ -17,7 +17,7 @@ class ReEncryptionPointTestCase(APITestCase):
 
         data = {
             'records_set_id': 1,
-            'recepient_id': self.recepient.id,
+            'recepient_id': self.recepient.user.id,
             'verifying_key': 'somestr'
 
         }

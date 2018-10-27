@@ -27,4 +27,3 @@ class EventsGettingTestCase(BlockChainTestCase):
 
     def test_kek(self):
         patient_address = self.account['address']
-        print(self.register_patient(patient_address, "jhnmNFFN".encode('utf-8'), "mKJB<MN".encode('utf-8')))

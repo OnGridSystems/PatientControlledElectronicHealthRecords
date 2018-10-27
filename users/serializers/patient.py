@@ -13,6 +13,7 @@ class PatientSignupSerializer(serializers.Serializer):
     password = serializers.CharField(write_only=True)
     eth_address = serializers.CharField()
     pub_key = serializers.CharField()
+    user_id = serializers.IntegerField(read_only=True)
 
     def create(self, validated_data):
         user = User(

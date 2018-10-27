@@ -8,9 +8,12 @@ from re_encryption.serializers import (
 from re_encryption.models import ReEncryption
 
 
-class ReEncryptionCreation(generics.CreateAPIView):
+class ReEncryptionCreation(generics.ListCreateAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = ReEncryptionSerializer
+
+    def get_queryset(self):
+        return ReEncryption.objects.filter(recepient_id=self.request.user.id)
 
 
 class ReEncryptionDetail(generics.RetrieveAPIView):
